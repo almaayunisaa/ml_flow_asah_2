@@ -22,23 +22,28 @@ X_train, X_test, y_train, y_test = automate_Azizah(df, save_path, file_path_head
 
 input_example = X_train[0:5]
 
-with mlflow.start_run():
-    n_estimators = 500
-    max_depth = 30
-    min_samples_split = 5
-    min_samples_leaf=2
-    
-    mlflow.autolog()
+n_estimators = 500
+max_depth = 30
+min_samples_split = 5
+min_samples_leaf = 2
 
-    # Initialize RandomForestClassifier
-    rf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf)
-    rf.fit(X_train, y_train)
-    # Logging model
-    mlflow.sklearn.log_model(
-        sk_model=rf,
-        artifact_path="model",
-        input_example=input_example
-    )
+mlflow.autolog()
 
-    accuracy = rf.score(X_test, y_test)
-    mlflow.log_metric("accuracy", accuracy)
+# Initialize RandomForestClassifier
+rf = RandomForestClassifier(
+    n_estimators=n_estimators,
+    max_depth=max_depth,
+    min_samples_split=min_samples_split,
+    min_samples_leaf=min_samples_leaf
+)
+rf.fit(X_train, y_train)
+
+# Logging model
+mlflow.sklearn.log_model(
+    sk_model=rf,
+    artifact_path="model",
+    input_example=input_example
+)
+
+accuracy = rf.score(X_test, y_test)
+mlflow.log_metric("accuracy", accuracy)
